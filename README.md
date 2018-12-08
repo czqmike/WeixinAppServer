@@ -1,0 +1,2 @@
+# WeixinAppServer
+采用Servlet方式的微信小程序服务器端实现
