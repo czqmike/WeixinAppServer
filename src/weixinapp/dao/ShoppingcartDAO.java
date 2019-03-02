@@ -62,7 +62,7 @@ public class ShoppingcartDAO {
 	}
 
 	public static boolean insert(Shoppingcart sc) {
-		boolean ok = false;
+		boolean ok = true;
 		
 		Connection conn = JDBCUtil.getConn();
 		PreparedStatement stmt = null;
@@ -73,11 +73,12 @@ public class ShoppingcartDAO {
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, sc.getUser_id());
 			stmt.setInt(2, sc.getGood_id());
-			
+
 			stmt.executeUpdate();
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+			ok = false;
 		} finally {
 			JDBCUtil.closeConn(stmt, conn);
 		}

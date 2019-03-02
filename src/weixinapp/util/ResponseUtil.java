@@ -25,5 +25,15 @@ public class ResponseUtil {
 			e.printStackTrace();
 		}
 	}
+	
+	public static void showError(HttpServletResponse response, String msg) {
+		try {
+			PrintWriter out = response.getWriter();
+			response.setStatus(303);
+			out.print(msg);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 }

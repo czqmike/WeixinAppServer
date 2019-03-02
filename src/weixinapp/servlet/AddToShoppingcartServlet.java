@@ -39,12 +39,24 @@ public class AddToShoppingcartServlet extends HttpServlet {
 		boolean insertFlag = true;
 		if (user_id != null && good_id != null) {
 			Shoppingcart sc = new Shoppingcart(Integer.parseInt(user_id), Integer.parseInt(good_id));
+
 			insertFlag = ShoppingcartDAO.insert(sc);
-			ResponseUtil.showSuccess(response);
+
+			if (insertFlag == false) {
+				String errmsg = "Insert into Database Error in [AddToShoppingcartServlet]!";
+				System.err.println(errmsg);
+
+				ResponseUtil.showError(response, errmsg);
+				return;
+			} else {
+				ResponseUtil.showSuccess(response);
+			}
+
 		} else {
-			System.err.println("Get user_id or good_id error in AddToShoppingcartServlet!");
-			ResponseUtil.showError(response);
-		}
+			String errmsg = "Get user_id or good_id error in [AddToShoppingcartServlet]!";
+			System.err.println(errmsg);
+			ResponseUtil.showError(response, errmsg);
+		} 
 	}
 
 	/**
