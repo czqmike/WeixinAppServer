@@ -11,11 +11,13 @@ public class Conversation {
 	private int user_des;
 	private LocalDateTime time;	// 类中存储的是LocalDateTime格式，但是getTime()返回的是格式化后的String
 	private String content;
+	private boolean been_read;
 
 	public Conversation() {
 		this.conv_id = this.user_src = this.user_des = -1;
 		this.time = LocalDateTime.now();
 		this.content = "";
+		this.been_read = false;
 	}
 
 	public Conversation(Conversation con) {
@@ -24,6 +26,7 @@ public class Conversation {
 		this.user_des = con.user_des;
 		this.time = con.time;
 		this.content = con.content;
+		this.been_read = con.isBeen_read();
 	}
 
 	public Conversation(int user_src, int user_des, String content) {
@@ -31,6 +34,7 @@ public class Conversation {
 		this.user_des = user_des;
 		this.time = LocalDateTime.now();
 		this.content = content;
+		this.been_read = false;
 	}
 
 	public int getConv_id() {
@@ -75,6 +79,14 @@ public class Conversation {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public boolean isBeen_read() {
+		return been_read;
+	}
+
+	public void setBeen_read(boolean been_read) {
+		this.been_read = been_read;
 	}
 
 

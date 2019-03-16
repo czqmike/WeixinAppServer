@@ -13,6 +13,15 @@ import weixinapp.model.*;
  */
 public class JSONArrayUtil {
 
+	@SuppressWarnings("rawtypes")
+	public static JSONArray createNormalJSONArray(ArrayList list) {
+		JSONArray jsonarr = new JSONArray();
+		for (Object obj : list) {
+			jsonarr.put(new JSONObject(obj));
+		}
+		return jsonarr;
+	}
+
 	public static JSONArray createJSONArray(ArrayList<Goods> list) {
 		JSONArray jsonarr = new JSONArray();
 		

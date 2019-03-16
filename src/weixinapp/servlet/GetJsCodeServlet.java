@@ -55,10 +55,15 @@ public class GetJsCodeServlet extends HttpServlet {
 		int user_id = UserDAO.selectByOpenId(open_id);	// 根据open_id查询此用户的user_id，查询到了就返回，否则插入创建新用户后返回其user_id
 		
 		User user = new User(nick_name, 0, open_id, "", "", "", "", avatar_url); // 创建user实体，包含用户名，open_id，头像
+
 		if (user_id == -1) {
 			UserDAO.Insert(user);
+
 			user_id = UserDAO.selectByOpenId(open_id);
 		}
+		
+		// 每次登录时更新用户头像
+		UserDAO.updateUserAvatar(user_id, user.getAvatar_url());
 		
 		JSONObject jsonobj = new JSONObject();
 		try {

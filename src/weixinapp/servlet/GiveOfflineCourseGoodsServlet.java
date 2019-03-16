@@ -46,11 +46,11 @@ public class GiveOfflineCourseGoodsServlet extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		ArrayList<Goods> list = GoodsDAO.selectOfflineCourseGoods();
 		
-		JSONObject jsonobj = new JSONObject();
+//		JSONObject jsonobj = new JSONObject();
 		JSONArray jsonarr = new JSONArray();
-		GoodTypeDAO goodTypeDao = new GoodTypeDAO();
-		Map map = goodTypeDao.selectTypeName("线下辅导");
-		Iterator it = null;
+//		GoodTypeDAO goodTypeDao = new GoodTypeDAO();
+//		Map map = goodTypeDao.selectTypeName("线下辅导");
+//		Iterator it = null;
 		
 		jsonarr = JSONArrayUtil.createJSONArray(list); // 替换以下代码↓↓↓↓↓
 

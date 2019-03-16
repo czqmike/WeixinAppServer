@@ -47,12 +47,69 @@ public class ConversationDAO {
 		String sql = "select * " +
 				     "from conversation " +
 					 "where (user_src = ? and user_des = ?) or (user_src = ? and user_des = ?) " +
-				     "order by conv_id asc";
+				     "order by conversation.time asc";
 				     
 		list = select(sql, new Object[] {user_src, user_des, user_des, user_src});
 		return list;
 	}
 
-	// TODO: Add Insert into conversation
+	public static ArrayList<Conversation> selectLatest(int user_lower) {
+		ArrayList<Conversation> list = new ArrayList<> ();
+		String sql = "select * from conversation " + 
+					 "where (user_src = ? and user_des = ?) or (user_src = ? and user_des = ?) " + 
+					 "order by conversation.time desc " + 
+					 "limit 0, 1";
 
+		// 选出和user_lower正在聊天的用户
+		ArrayList<Integer> chaings = ConvStatusDAO.selectChatingWith(user_lower);
+
+		// 每次选出和user_upper的最新的聊天记录，并合并list
+		for (int user_upper : chaings) {
+			list.addAll( select(sql, new Object[] {user_lower, user_upper, user_upper, user_lower}) );
+		}
+		
+		return list;
+	}
+
+	static private boolean update(String sql, Object[] para) {
+		boolean ok = false;
+		Connection conn = JDBCUtil.getConn();
+		PreparedStatement preStmt = null;
+		try {
+			preStmt = conn.prepareStatement(sql);
+			for(int i = 0; i < para.length; ++i){
+				preStmt.setObject(i + 1, para[i]);
+			}
+			preStmt.executeUpdate();
+			ok = true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JDBCUtil.closeConn(preStmt, conn);
+		}
+		return ok;
+	}
+
+	// 在往Conversation表中插入消息时，会自动往conv_status中插入一条记录，表示这两个人正在聊天
+	public static boolean insertConversation(Conversation conv) {
+		String sql = "INSERT INTO `weixindb`.`conversation` (`conv_id`, `user_src`, `user_des`, `time`, `content`, `been_read`) " +
+					 "VALUES (?, ?, ?, ?, ?, ?);"; 
+
+		boolean ok1 = update(sql, 
+				new Object[] {conv.getConv_id(), conv.getUser_src(), conv.getUser_des(), conv.getTime(), conv.getContent(), conv.isBeen_read()}); 
+
+		int user_lower = conv.getUser_src();
+		int user_upper = conv.getUser_des();
+		if (user_lower > user_upper) {
+			int tmp = user_lower; user_lower = user_upper; user_upper = tmp;
+		}
+
+		boolean ok2 = ConvStatusDAO.insertConvStatus(user_lower, user_upper);
+		
+		return ok1 && ok2;
+	}
+
+	
+	
+	
 }
